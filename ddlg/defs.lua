@@ -19,6 +19,14 @@
     onclick = function
 }
 
+-- color
+{
+    type = "color",
+    id = string,
+    label = string,
+    color = color
+}
+
 --  combo box
 {
     type = "(combo-box)|(drop-down)|(combobox)",
@@ -34,7 +42,6 @@
     type = "(text)|(entry)",
     label = string,
     text = string,
-    decimals = integer
 }
 
 -- label
