@@ -80,3 +80,27 @@
     colors = { color1, color2, color3, ... },
     onclick = function
 }
+
+-- slider
+{
+    type = "slider",
+    id = string,
+    label = string,
+    min = integer,
+    max = integer,
+    value = integer,
+    onchange = function
+}
+
+-- file
+{
+    type = "file",
+    id = string,
+    label = string,
+    title = string,
+    open = boolean,
+    save = boolean,
+    filename = string | { string1, string2, string3 ... },
+    filetypes = { string1, string2, string3 ... },
+    onchange = function
+}
