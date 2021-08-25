@@ -8,19 +8,19 @@ local parse = function(dlg)
 
         if obj[1] then
             -- obj is array
-            local direction = obj.direction ~= "horizontal"
+            local isHorizontal = (obj.direction == "horizontal")
 
+            local isFirst = true
             for _, item in ipairs(obj) do
-                local isFirst = true
-                for _, o in ipairs(flatten(item)) do
-                    if isFirst then
-                        isFirst = false
-                    else
-                        table.insert(arr, {
-                            type = "newrow"
-                        })
-                    end
+                if isFirst or isHorizontal then
+                    isFirst = false
+                else
+                    table.insert(arr, {
+                        type = "newrow"
+                    })
+                end
 
+                for _, o in ipairs(flatten(item)) do
                     table.insert(arr, o)
                 end
             end
