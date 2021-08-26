@@ -1,30 +1,52 @@
 local parse = function(dlg)
-    function flatten(obj)
+    -- flatten layerd structure
+    --   obj: layerd structure
+    --   idList: current and ancestor id list
+    --   panretDirection: true when vertical, false when horizontal
+    local internalId = 0
+    function flatten(obj, idList, parentDirection)
         local arr = {}
 
         if type(obj) ~= "table" then
             return {}
         end
 
+        -- create new id list
+        local newIdList = {}
+        table.move(idList, 1, #idList, 1, newIdList)
+        if type(obj.id) == "string" then
+            table.insert(newIdList, 1, obj.id)
+        end
+
         if obj[1] then
             -- obj is array
-            local isHorizontal = (obj.direction == "horizontal")
+            local direction = parentDirection
+            if obj.direction == "vertical" then
+                direction = true
+            elseif obj.direction == "horizontal" then
+                direction = false
+            end
 
             local isFirst = true
             for _, item in ipairs(obj) do
-                if isFirst or isHorizontal then
-                    isFirst = false
-                else
-                    table.insert(arr, {
-                        type = "newrow"
-                    })
+                if direction then
+                    -- insert "newrow" before element except the first one
+                    if isFirst then
+                        isFirst = false
+                    else
+                        table.insert(arr, {
+                            type = "newrow"
+                        })
+                    end
                 end
 
-                for _, o in ipairs(flatten(item)) do
+                for _, o in ipairs(flatten(item, newIdList, direction)) do
                     table.insert(arr, o)
                 end
             end
         else
+            obj.idList = table.concat(newIdList, ", ")
+            -- obj.idList = newIdList
             table.insert(arr, obj)
         end
 
@@ -33,7 +55,7 @@ local parse = function(dlg)
 
     local title = dlg.title
     local onclose = dlg.onclose
-    local items = flatten(dlg)
+    local items = flatten(dlg, {}, true)
 
     print("title: " .. title)
     print("items: ")
@@ -48,7 +70,6 @@ end
 
 parse {
     title = "test",
-    direction = "vertical",
     {
         type = "separator",
         text = "colors"
@@ -95,7 +116,8 @@ parse {
             options = { "apple", "banana", "orange" }
         },
         {
-            direciton = "horizontal",
+            direction = "horizontal",
+            id = "radio1",
             {
                 type = "radio",
                 id = "radio-1-a",
@@ -111,6 +133,7 @@ parse {
             }
         },
         {
+            id = "radio2",
             {
                 type = "radio",
                 id = "radio-2-a",
@@ -131,7 +154,7 @@ parse {
         text = "misc"
     },
     {
-        direciton = "vertical",
+        direction = "vertical",
         id = "misc",
         {
             type = "label",
@@ -156,7 +179,7 @@ parse {
         type = "separator"
     },
     {
-        direciton = "horizontal",
+        direction = "horizontal",
         {
             type = "button",
             id = "ok",
