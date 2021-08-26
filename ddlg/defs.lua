@@ -43,6 +43,7 @@
     id = string,
     label = string,
     text = string,
+    focus = function
 }
 
 -- label
