@@ -45,9 +45,11 @@ local parse = function(dlg)
                 end
             end
         else
+            obj.id = "" .. internalId
             obj.idList = table.concat(newIdList, ", ")
             -- obj.idList = newIdList
             table.insert(arr, obj)
+            internalId = internalId + 1
         end
 
         return arr
