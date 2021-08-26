@@ -57,6 +57,7 @@
 -- number entry
 {
     type = "number",
+    id = string,
     label = string,
     text = string,
     decimals = integer
