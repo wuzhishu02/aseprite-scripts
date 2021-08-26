@@ -40,6 +40,7 @@
 -- text entry
 {
     type = "(text)|(entry)",
+    id = string,
     label = string,
     text = string,
 }
