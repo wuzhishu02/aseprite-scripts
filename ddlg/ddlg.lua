@@ -59,15 +59,141 @@ local parse = function(dlg)
     local onclose = dlg.onclose
     local items = flatten(dlg, {}, true)
 
-    print("title: " .. title)
-    print("items: ")
+    -- print("title: " .. title)
+    -- print("items: ")
+    -- for _, item in ipairs(items) do
+    --     print("  {")
+    --     for key, value in pairs(item) do
+    --         print("    " .. key  .. ": " .. tostring(value))
+    --     end
+    --     print("  },")
+    -- end
+
+    -- bounds
+
+    local dialog = nil
+    if title then
+        if onclose then
+            dialog = Dialog {
+                title = title,
+                onclose = onclose
+            }
+        else
+            dialog = Dialog(title)
+        end
+    else
+        dialog = Dialog()
+    end
+
     for _, item in ipairs(items) do
+        print(_)
         print("  {")
         for key, value in pairs(item) do
             print("    " .. key  .. ": " .. tostring(value))
         end
         print("  },")
+
+        if item.type == "newrow" then
+            dialog:newrow()
+        elseif item.type == "button" then
+            dialog:button {
+                id = item.id,
+                label = item.label,
+                text = item.text,
+                selected = item.selected,
+                focus = item.focus,
+                onclick = item.onclick
+            }
+        elseif item.type == "check-box" or item.type == "check" then
+            dialog:check {
+                id = item.id,
+                label = item.label,
+                text = item.text,
+                selected = item.selected,
+                onclick = item.onclick
+            }
+        elseif item.type == "color" then
+            print(item.color)
+            dialog:color {
+                id = item.id,
+                label = item.label,
+                color = item.color
+            }
+            print(item)
+        elseif item.type == "combo-box" or item.type == "drop-down" or item.type == "combobox" then
+            dialog:combobox {
+                id = item.id,
+                label = item.label,
+                option = item.option,
+                options = item.options,
+                onchange = item.onchange
+            }
+        elseif item.type == "text" or item.type == "entry" then
+            dialog:entry {
+                id = item.id,
+                label = item.label,
+                text = item.text,
+                focus = item.focus
+            }
+        elseif item.type == "label" then
+            dialog:label {
+                id = item.id,
+                label = item.label,
+                text = item.text
+            }
+        elseif item.type == "number" then
+            dialog:number {
+                id = item.id,
+                label = item.label,
+                text = item.text,
+                decimals = item.decimals
+            }
+        elseif item.type == "radio" then
+            dialog:radio {
+                id = item.id,
+                label = item.label,
+                text = item.text,
+                selected = item.selected,
+                onclick = item.onclick
+            }
+        elseif item.type == "separator" then
+            dialog:separator {
+                id = item.id,
+                label = item.label,
+                text = item.text
+            }
+        elseif item.type == "shades" then
+            dialog:shades {
+                id = item.id,
+                label = item.label,
+                mode = item.mode,
+                colors = item.colors,
+                onclick = item.onclick
+            }
+        elseif item.type == "slider" then
+            dialog:slider {
+                id = item.id,
+                label = item.label,
+                min = item.min,
+                max = item.max,
+                value = item.value,
+                onchange = item.onchange
+            }
+        elseif item.type == "file" then
+            dialog:file {
+                id = item.id,
+                label = item.label,
+                title = item.title,
+                open = item.open,
+                save = item.save,
+                filename = item.filename,
+                filetypes = item.filetypes,
+                onchange = item.onchange
+            }
+        end
     end
+
+    return dialog
 end
 
 parse {
@@ -83,17 +209,17 @@ parse {
             type = "color",
             id = "color-1",
             label = "Color 1",
-            color = { r = 0xFF, g = 0xFF, b = 0xFF }
+            color = Color { r = 0xFF, g = 0xFF, b = 0xFF }
         },
         {
             type = "shades",
             id = "color-2",
             label = "Color 2",
-            mode = "pick",
+            mode = "sort",
             colors = {
-                { r = 0xFF, g = 0xFF, b = 0xFF },
-                { r = 0x7F, g = 0x7F, b = 0x7F },
-                { r = 0x00, g = 0x00, b = 0x00 }
+                Color { r = 0xFF, g = 0xFF, b = 0xFF },
+                Color { r = 0x7F, g = 0x7F, b = 0x7F },
+                Color { r = 0x00, g = 0x00, b = 0x00 }
             }
         }
     },
@@ -130,8 +256,7 @@ parse {
             {
                 type = "radio",
                 id = "radio-1-b",
-                text = "B",
-                selected = true
+                text = "B"
             }
         },
         {
@@ -146,8 +271,7 @@ parse {
             {
                 type = "radio",
                 id = "radio-2-b",
-                text = "B",
-                selected = true
+                text = "B"
             }
         }
     },
@@ -175,6 +299,12 @@ parse {
             type = "number",
             label = "number",
             decimals = 10
+        },
+        {
+            type = "button",
+            id = "button",
+            label = "button",
+            text = "PUSH"
         }
     },
     {
@@ -185,12 +315,12 @@ parse {
         {
             type = "button",
             id = "ok",
-            label = "&OK"
+            text = "&OK"
         },
         {
             type = "button",
             id = "calcel",
-            label = "&Cancel"
+            text = "&Cancel"
         }
     }
-}
+}:show()
