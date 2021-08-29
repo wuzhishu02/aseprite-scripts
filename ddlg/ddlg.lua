@@ -86,13 +86,6 @@ local parse = function(dlg)
     end
 
     for _, item in ipairs(items) do
-        print(_)
-        print("  {")
-        for key, value in pairs(item) do
-            print("    " .. key  .. ": " .. tostring(value))
-        end
-        print("  },")
-
         if item.type == "newrow" then
             dialog:newrow()
         elseif item.type == "button" then
@@ -113,13 +106,11 @@ local parse = function(dlg)
                 onclick = item.onclick
             }
         elseif item.type == "color" then
-            print(item.color)
             dialog:color {
                 id = item.id,
                 label = item.label,
                 color = item.color
             }
-            print(item)
         elseif item.type == "combo-box" or item.type == "drop-down" or item.type == "combobox" then
             dialog:combobox {
                 id = item.id,
@@ -305,6 +296,23 @@ parse {
             id = "button",
             label = "button",
             text = "PUSH"
+        },
+        {
+            type = "slider",
+            id = "slider",
+            label = "slider",
+            min = 0,
+            max = 10,
+            value = 0
+        },
+        {
+            type = "file",
+            id = "file",
+            label = "file",
+            title = "Open",
+            open = true,
+            save  = false,
+            filetypes = { "ase", "aseprite" }
         }
     },
     {
